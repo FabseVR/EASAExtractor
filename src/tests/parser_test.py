@@ -1,4 +1,5 @@
 import json
+from settings import get_default_value
 
 from watcher.parser import parse_response
 from watcher.utils import add_closed_items, get_closed_items, is_closed_item, remove_outdated_items
@@ -8,9 +9,9 @@ def test_parser():
     """Parser test based on a small real life scenario (9 publications). 
     The Target is hand-crafted .
     """
-    with open("tests/data/test.json") as fd:
+    with open(get_default_value("T_PARSER_TARGET")) as fd:
         target = json.load(fd)
-    with open("tests/data/test.html") as fd:
+    with open(get_default_value("T_PARSER_INPUT")) as fd:
         input = fd.read()
     output = parse_response(input)
     assert output.keys() == target.keys()
@@ -22,7 +23,7 @@ def test_parser_on_empty_str():
     assert not output
 
 def test_utils():
-    test_file = "tests/data/closed_items.json"
+    test_file = get_default_value("CLOSED_ITEMS_JSON")
     old_items = ["A", "B", "C", "E"]
     old_json = '{"2019-05-31": ["A", "B", "C", "E"]}'
     with open(test_file, "w") as fd:

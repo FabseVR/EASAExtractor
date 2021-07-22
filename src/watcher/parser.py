@@ -5,8 +5,7 @@ import bs4
 from bs4 import BeautifulSoup
 from datetime import date, timedelta
 
-web_address = "https://ad.easa.europa.eu/search/advanced/result/"
-local_file = "tests/data/test.html"
+from settings import get_default_value
 
 
 def request_items(days: int) -> str:
@@ -18,11 +17,12 @@ def request_items(days: int) -> str:
     Returns:
         str: Response as HTML
     """
+    url = get_default_value("WEBADDRESS")
     payload = {
         "fi_action": "advanced",
         "fi_date_start": (date.today() - timedelta(days=days)).isoformat(),
     }
-    r = requests.post(web_address, data=payload)
+    r = requests.post(url, data=payload)
     if r.status_code == requests.codes.ok:
         return r.text
     return ""
@@ -37,7 +37,7 @@ def request_local_items(days: int) -> str:
     Returns:
         str: Response as HTML
     """
-    with open(local_file) as fd:
+    with open("tests/data/test.html") as fd:
         return fd.read()
 
 

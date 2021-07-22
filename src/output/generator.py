@@ -1,21 +1,22 @@
 from datetime import date
 import os
 
-PATTERN = "number,category,revision,issue_date,issued_by,,,holder_and_type"
-DEFAULT_PATH = 'data/root'
+from settings import get_default_value
 
 def generate_csv(item_dict: dict):
+    pattern = get_default_value("PATTERN")
     csv_out = ""
     for v in item_dict.values():
         v['holder_and_type'] = "; ".join(
             map(lambda x: f"{x[0]}: ({'+ '.join(x[1])})", v['holder_and_type'].items()))
-        line = ",".join([v.get(k, "") for k in PATTERN.split(',')]) + "\n"
+        line = ",".join([v.get(k, "") for k in pattern.split(',')]) + "\n"
 
         csv_out += line
     return csv_out
 
 
-def write_csv(csv_body: str, path: str = DEFAULT_PATH):
+def write_csv(csv_body: str, path: str = None):
+    path = path or get_default_value("ROOT_FOLDER")
     filename = date.today().isoformat()+".csv"
     with open(os.path.join(path, filename), "w+") as fd:
         fd.write(csv_body)

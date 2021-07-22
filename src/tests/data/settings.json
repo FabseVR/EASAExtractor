@@ -1,0 +1,11 @@
+{
+    "ROOT_FOLDER": "tests/data/root",
+    "CLOSED_ITEMS_JSON": "tests/data/closed_items.json",
+
+    "T_PARSER_TARGET": "tests/data/test.json",
+    "T_PARSER_INPUT" : "tests/data/test.html",
+
+    "WEBADDRESS": "https://ad.easa.europa.eu/search/advanced/result/",
+    "LAST_X_DAYS": 14,
+    "PATTERN": "number,category,revision,issue_date,issued_by,,,holder_and_type"
+}

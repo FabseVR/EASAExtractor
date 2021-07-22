@@ -105,7 +105,12 @@ def parse_response(response: str):
         Returns:
             str: The country code ('US', 'EU', ...)
         """
-        return issued_by.find('img')['alt']
+        country_to_association = {
+            'US': 'FAA',
+            'EU': 'EASA'
+        }
+        country_tag = issued_by.find('img')['alt']
+        return country_to_association.get(country_tag, country_tag)
 
     def subject_factory(subject: bs4.element.Tag) -> Tuple[str, str]:
         """Splits the actual subject into subject and a category tag. 

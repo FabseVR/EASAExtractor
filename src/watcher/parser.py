@@ -6,7 +6,7 @@ from bs4 import BeautifulSoup
 from datetime import date, timedelta
 
 web_address = "https://ad.easa.europa.eu/search/advanced/result/"
-local_file = "tests/data/EASA Safety Publications Tool.html"
+local_file = "tests/data/test.html"
 
 
 def request_items(days: int) -> str:

@@ -10,4 +10,4 @@ def clear_path(path):
                 os.rmdir(p)
             except OSError as e:
                 clear_path(p)
-                os.rmdir(p)
+    os.rmdir(path)

@@ -4,6 +4,7 @@
 
     "T_PARSER_TARGET": "tests/data/test.json",
     "T_PARSER_INPUT" : "tests/data/test.html",
+    "T_TEMP_FOLDER": "tests/temp",
 
     "WEBADDRESS": "https://ad.easa.europa.eu/search/advanced/result/",
     "LAST_X_DAYS": 14,

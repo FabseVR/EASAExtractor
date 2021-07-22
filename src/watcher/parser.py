@@ -53,6 +53,7 @@ def parse_response(response: str):
     Example: 
     {
         '2021-0174': {
+            'number': '2021-0174'
             'category': 'AD',
             'revision': '0', 
             'issued_by': 'EU', 
@@ -171,6 +172,7 @@ def parse_response(response: str):
         attachement = attachment_factory(values[6])
 
         response_dict[number] = {
+            'number': number,
             'category': category,
             'revision': revision,
             'issued_by': issued_by,

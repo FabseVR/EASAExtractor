@@ -1,24 +1,19 @@
-import requests, re
-from bs4 import BeautifulSoup
+from extraction.extractor import update_item_dict
 from output.generator import generate_csv, write_csv
-from settings import get_default_value
-from tests.utils import clear_path
-from utils import create_folder_structure, retrieve_attachement, retrieve_attachements
+from utils import create_folder_structure, retrieve_attachments
+from watcher.parser import parse_response, request_items
+from watcher.utils import remove_outdated_items
+from gui.frame import create_gui
 
-from watcher.parser import parse_response, request_items, request_local_items
-from watcher.utils import add_closed_items, get_closed_items, is_closed_item, remove_outdated_items
-
-LAST_X_DAYS = get_default_value("LAST_X_DAYS")
 
 remove_outdated_items()
-html = request_local_items(LAST_X_DAYS)
-item_dict = parse_response(html)
-for item in filter(is_closed_item, item_dict):
-    del item_dict[item]
-#Apply Filtering
-#Custom Selection
-#create_folder_structure(item_dict)
-#...
-#retrieve_attachements(item_dict)
-#add_closed_items(item_dict)
-write_csv(generate_csv(item_dict))
+response = request_items()
+item_dict = parse_response(response)
+#item_dict = {'2021-0174': {'number': '2021-0174', 'category': 'AD', 'revision': '0', 'issued_by': 'EASA', 'issue_date': '2021-07-21', 'subject': 'Rotorcraft Flight Manual – Supplements / One-Engine Inoperative Performance Limitations – Amendment', 'holder_and_type': {'AIRBUS HELICOPTERS': ['SA 330 / AS 332 / EC 225']}, 'effective_date': '2021-08-04', 'attachment': 'EASA_AD_2021-0174_1.pdf', 'folder': 'EU AD 2021-0174'}, '2021-0173': {'number': '2021-0173', 'category': 'AD', 'revision': '0', 'issued_by': 'EASA', 'issue_date': '2021-07-21', 'subject': 'Oxygen – Courier Area Oxygen Distribution System Flexible Hoses – Inspection / Replacement', 'holder_and_type': {'AIRBUS': ['A330'], 'ELBE FLUGZEUGWERKE GmbH': ['EASA STC 10063795', 'EASA STC 10063798']}, 'effective_date': '2021-08-04', 'attachment': 'EASA_AD_2021-0173_1.pdf', 'folder': 'EU AD 2021-0173'}, '2021-14-20': {'number': '2021-14-20', 'category': 'AD', 'revision': '0', 'issued_by': 'FAA', 'issue_date': '2021-07-21', 'subject': 'Air Conditioning - Cabin Altitude Pressure Switches - Functional Test', 'holder_and_type': {'BOEING': ['737']}, 'effective_date': '2021-07-20', 'attachment': 'EASA_AD_US-2021-14-20_1.pdf', 'folder': 'US AD 2021-14-20'}, '2021-13-10': {'number': '2021-13-10', 'category': 'AD', 'revision': '0', 'issued_by': 'FAA', 'issue_date': '2021-07-21', 'subject': 'Wings - Lower Wing Skin - Inspection', 'holder_and_type': {'BOEING': ['777']}, 'effective_date': '2021-08-19', 'attachment': 'EASA_AD_US-2021-13-10_1.pdf', 'folder': 'US AD 2021-13-10'}, '2021-17': {'number': '2021-17', 'category': 'AD', 'revision': '1', 'issued_by': 'CA', 'issue_date': '2021-07-20', 'subject': 'Oxygen – Supply System Flexible Oxygen Hose – Inspection and Replacement', 'holder_and_type': {'BOMBARDIER': ['BD-700']}, 'effective_date': '2021-08-02', 'attachment': 'EASA_AD_CF-2021-17R1_1.pdf', 'folder': 'CA AD 2021-17'}, '2021-0172': {'number': '2021-0172', 'category': 'AD', 'revision': '0', 'issued_by': 'EASA', 'issue_date': '2021-07-20', 'subject': 'Equipment / Furnishings – 80VU Rack Attachments – Inspection / Repair', 'holder_and_type': {'AIRBUS': ['A318', 'A319', 'A320', 'A321']}, 'effective_date': '2021-08-03', 'attachment': 'EASA_AD_2021-0172_1.pdf', 'folder': 'EU AD 2021-0172'}, '2021-0152': {'number': '2021-0152', 'category': 'AD', 'revision': '1', 'issued_by': 'EASA', 'issue_date': '2021-07-20', 'subject': 'Fuselage – Main Gearbox Suspension Bar Fittings and Screws – Replacement [Life Limitation]', 'holder_and_type': {'AIRBUS HELICOPTERS': ['SA 330 / AS 332 / EC 225']}, 'effective_date': '2021-07-27', 'attachment': 'EASA_AD_2021-0152R1_1.pdf', 'folder': 'EU AD 2021-0152'}, '2015-0036': {'number': '2015-0036', 'category': 'AD', 'revision': '3', 'issued_by': 'EASA', 'issue_date': '2021-07-20', 'subject': 'Fuselage – Fuselage Skin Repairs – Inspection', 'holder_and_type': {'AIRBUS': ['A318', 'A319', 'A320', 'A321']}, 'effective_date': '2021-07-27', 'attachment': 'EASA_AD_2015-0036R3_1.pdf', 'folder': 'EU AD 2015-0036'}, '21-093': {'number': '21-093', 'category': 'PAD', 'revision': '2', 'issued_by': 'EASA', 'issue_date': '2021-07-20', 'subject': 'UMLAUT ENGINEERING GmbH – Hand-operated Fire Extinguishers – Inspection / Replacement', 'holder_and_type': {'APPLIANCES': ['ATA 26 FIRE PROTECTION']}, 'effective_date': '', 'attachment': 'EASA_PAD_21-093R2_1.pdf', 'folder': 'EU PAD 21-093'}}
+#Filter Items
+relevant_selection = create_gui(item_dict, {})
+relevant_dict = {k: v for k,v in item_dict.items() if k in relevant_selection}
+create_folder_structure(relevant_dict)
+retrieve_attachments(relevant_dict)
+update_item_dict(relevant_dict)
+write_csv(generate_csv(relevant_dict))

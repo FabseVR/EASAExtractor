@@ -8,7 +8,7 @@ from datetime import date, timedelta
 from settings import get_default_value
 
 
-def request_items(days: int) -> str:
+def request_items(days: int = None) -> str:
     """Send POST request to the EASA website to retrieve recent publications
 
     Args:
@@ -17,6 +17,7 @@ def request_items(days: int) -> str:
     Returns:
         str: Response as HTML
     """
+    days = days or get_default_value("LAST_X_DAYS")
     url = get_default_value("WEBADDRESS")
     payload = {
         "fi_action": "advanced",
@@ -61,7 +62,7 @@ def parse_response(response: str):
             'subject': 'Rotorcraft Flight Manual – Supplements / One-Engine Inoperative Performance Limitations – Amendment', 
             'holder_and_type': {'AIRBUS HELICOPTERS': ['SA 330 / AS 332 / EC 225']},
             'effective_date': '2021-08-04', 
-            'attachement': 'https://ad.easa.europa.eu/blob/EASA_AD_2021_0174.pdf/AD_2021-0174_1'
+            'attachment': 'https://ad.easa.europa.eu/blob/EASA_AD_2021_0174.pdf/AD_2021-0174_1'
         },
         ...
     }
@@ -150,10 +151,10 @@ def parse_response(response: str):
         """Extracts the href link to the (first) attached pdf-file.
 
         Args:
-            attachments (bs4.element.Tag): Table Column 'Attachement'
+            attachments (bs4.element.Tag): Table Column 'Attachment'
 
         Returns:
-            str: HTTP-link of the attachement.
+            str: HTTP-link of the attachment.
         """
         return attachments.find('li', class_='file_pdf').a['href']
 
@@ -174,7 +175,7 @@ def parse_response(response: str):
         subject, category = subject_factory(values[3])
         holder_and_type = holder_and_types_factory(values[4])
         effective_date = default_factory(values[5])
-        attachement = attachment_factory(values[6])
+        attachment = attachment_factory(values[6])
 
         response_dict[number] = {
             'number': number,
@@ -185,6 +186,6 @@ def parse_response(response: str):
             'subject': subject,
             'holder_and_type': holder_and_type,
             'effective_date': effective_date,
-            'attachement': attachement
+            'attachment': attachment
         }
     return response_dict

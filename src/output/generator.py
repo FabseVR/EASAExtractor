@@ -9,7 +9,7 @@ def generate_csv(item_dict: dict):
     for v in item_dict.values():
         v['holder_and_type'] = "; ".join(
             map(lambda x: f"{x[0]}: ({'+ '.join(x[1])})", v['holder_and_type'].items()))
-        line = ",".join([v.get(k, "") for k in pattern.split(',')]) + "\n"
+        line = ",".join([v.get(k, "") or "" for k in pattern.split(',')]) + "\n"
 
         csv_out += line
     return csv_out

@@ -9,7 +9,7 @@ def update_item_dict(item_dict: dict):
     path = get_default_value("ROOT_FOLDER")
     for v in item_dict.values():
         v.update(
-            **extract_values_from_pdf(os.path.join(path, v['folder'], v['attachement']), v['issued_by']))
+            **extract_values_from_pdf(os.path.join(path, v['folder'], v['attachment']), v['issued_by']))
 
 
 def extract_values_from_pdf(file: str, style: str) -> dict:

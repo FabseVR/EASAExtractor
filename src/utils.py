@@ -17,16 +17,16 @@ def create_folder_structure(item_dict: dict, path: str = None):
             print(e)
 
 
-def retrieve_attachements(item_dict: dict, path: str = None):
+def retrieve_attachments(item_dict: dict, path: str = None):
     path = path or get_default_value('ROOT_FOLDER')
     for v in item_dict.values():
-        filenname = retrieve_attachement(v['attachement'], v['folder'])
-        v['attachement'] = filenname
+        filenname = retrieve_attachment(v['attachment'], v['folder'])
+        v['attachment'] = filenname
 
 
-def retrieve_attachement(attachement: str, folder: str, path: str = None):
+def retrieve_attachment(attachment: str, folder: str, path: str = None):
     path = path or get_default_value('ROOT_FOLDER')
-    r = requests.get(attachement)
+    r = requests.get(attachment)
     if r.status_code == requests.codes.ok:
         filename = re.findall(r"\"(.*)\"", r.headers['Content-Disposition'])[0]
         try:

@@ -4,5 +4,5 @@
 
     "WEBADDRESS": "https://ad.easa.europa.eu/search/advanced/result/",
     "LAST_X_DAYS": 14,
-    "PATTERN": "number,category,revision,issue_date,issued_by,,,holder_and_type"
+    "PATTERN": "number,category,revision,issue_date,issued_by,,,holder_and_type,foreign_ad,supersedure"
 }

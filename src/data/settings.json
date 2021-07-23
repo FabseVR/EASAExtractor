@@ -1,8 +1,28 @@
 {
-    "ROOT_FOLDER": "data/root",
-    "CLOSED_ITEMS_JSON": "data/closed_items.json",
-
-    "WEBADDRESS": "https://ad.easa.europa.eu/search/advanced/result/",
-    "LAST_X_DAYS": 14,
-    "PATTERN": "number,category,revision,issue_date,issued_by,,,holder_and_type,foreign_ad,supersedure"
+  "ROOT_FOLDER": "data/root",
+  "CLOSED_ITEMS_JSON": "data/closed_items.json",
+  "WEBADDRESS": "https://ad.easa.europa.eu/search/advanced/result/",
+  "LAST_X_DAYS": "14",
+  "PATTERN": {
+    "p": "category,ASB,,LTA,,FAA,,EASA,,effective_date,,,,,,,,supersedure,foreign_ad,holder_and_type,",
+    "subpatterns": {
+      "ASB": {
+        "p": "number,revision,issue_date,",
+        "condition": "issued_by"
+      },
+      "LTA": {
+        "p": "number,revision,issue_date,",
+        "condition": "issued_by"
+      },
+      "FAA": {
+        "p": "number,revision,issue_date,",
+        "condition": "issued_by"
+      },
+      "EASA": {
+        "p": "number,revision,issue_date,",
+        "condition": "issued_by"
+      }
+    }
+  },
+  "FILTER": {}
 }

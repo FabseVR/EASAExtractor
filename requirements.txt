@@ -1,0 +1,4 @@
+requests==2.26.0
+pytest==6.2.4
+beautifulsoup4==4.9.3
+PyPDF2==1.26.0

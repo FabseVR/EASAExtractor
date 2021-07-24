@@ -16,6 +16,12 @@ class CHECKER(Enum):
     def __str__(self):
         return self.value
 
+    def __lt__(self, b):
+        return self == CHECKER.CHECKED and b == CHECKER.UNCHECKED
+
+    def as_tag(self):
+        return "CHECKED" if bool(self) else "UNCHECKED"
+
 def create_gui(relevant_items, ignored_items):
     relevant_selection = []
 

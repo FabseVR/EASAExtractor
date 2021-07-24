@@ -65,11 +65,14 @@ class Table(ttk.Treeview):
         self.load_column_params()
         self.insert_rows()
 
+        self.tag_configure("UNCHECKED", foreground="#666")
+
         def tv_select_event(event):
             focus = self.focus()
-            if focus == self.identify_row(event.y):
-                is_checked = CHECKER(self.item(focus)["values"][0])
-                self.set(focus, column="Checked", value=~is_checked)
+            if focus and focus == self.identify_row(event.y):
+                checked = ~CHECKER(self.set(focus, "Checked"))
+                self.set(focus, column="Checked", value=checked)
+                self.item(focus, tags=checked.as_tag())
 
         def show_filtermenu(event):
             iid = self.identify_row(event.y)
@@ -82,8 +85,8 @@ class Table(ttk.Treeview):
                 if col_id == 0:
                     return
 
-                checked = CHECKER(self.item(iid)["values"][0])
-                row_id = self.item(iid)["values"][1]
+                checked = CHECKER(self.set(iid, "Checked"))
+                row_id = self.set(iid, "Number")
                 key = tv_columns_inv[self["columns"][col_id]]
 
                 self.filtermenu.popup(
@@ -97,11 +100,38 @@ class Table(ttk.Treeview):
         self.bind("<ButtonRelease-3>", show_filtermenu)
 
     def load_column_params(self):
+        def sort_by_column(column, reverse=False):
+            l = sorted(
+                [
+                    (
+                        ~CHECKER(self.set(iid, "Checked"))
+                        if reverse
+                        else CHECKER(self.set(iid, "Checked")),
+                        self.set(iid, column),
+                        iid,
+                    )
+                    for iid in self.get_children()
+                ],
+                reverse=reverse,
+            )
+            for i, (_, _, k) in enumerate(l):
+                self.move(k, "", i)
+
+            self.heading(
+                column, command=lambda _c=column: sort_by_column(_c, not reverse)
+            )
+
         for c in self["columns"]:
             c_params = column_params.get(c, {})
 
             c_heading = c_params.get("text", c)
-            self.heading(c, text=c_heading, anchor=CENTER)
+
+            self.heading(
+                c,
+                text=c_heading,
+                anchor=CENTER,
+                command=lambda _c=c: sort_by_column(_c),
+            )
 
             d_column = {}
             c_column = c_params.get("column", {})
@@ -127,7 +157,12 @@ class Table(ttk.Treeview):
                         key=lambda x: list(tv_columns.keys()).index(x[0]),
                     )
                 )
-                self.insert(parent="", index=offset + i, values=values)
+                self.insert(
+                    parent="",
+                    index=offset + i,
+                    values=values,
+                    tags=[CHECKER(checked).as_tag()],
+                )
 
         insert_loop(
             {k: v for k, v in self.item_dict.items() if k in self.relevant_items},

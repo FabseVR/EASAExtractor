@@ -15,8 +15,10 @@ def change_settings(key, value):
         json.dump(settings, fd)
 
 
-def get_default_value(key):
+def get_default_value(key, type=None):
     global settings
+    if type:
+        return type(settings.get(key))
     return settings.get(key)
 
 

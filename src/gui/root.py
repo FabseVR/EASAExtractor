@@ -27,9 +27,12 @@ class ApplicationWrapper(tk.Frame):
 
         self.application.pack(expand=True, fill=BOTH)
 
-def run_app(**kwargs):
+def run_app(confirm_func, **kwargs):
     root = tk.Tk()
     root.geometry('1800x600')
-    app = ApplicationWrapper(root, **kwargs)
+    def confirm_wrapper(*args):
+        confirm_func(*args)
+        root.destroy()
+    app = ApplicationWrapper(root, confirm_func=confirm_wrapper, **kwargs)
     app.pack(expand=True, fill=BOTH)
     root.mainloop()

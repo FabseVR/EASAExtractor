@@ -8,16 +8,16 @@ from datetime import date, timedelta
 from settings import get_default_value
 
 
-def request_items(days: int = None) -> str:
+def request_items(days: int = None) -> dict:
     """Send POST request to the EASA website to retrieve recent publications
 
     Args:
         days (int): Days from today to determine the 'filter by date' start
 
     Returns:
-        str: Response as HTML
+        dict: Parsed publications
     """
-    days = days or get_default_value("LAST_X_DAYS")
+    days = days or get_default_value("LAST_X_DAYS", int)
     url = get_default_value("WEBADDRESS")
     payload = {
         "fi_action": "advanced",
@@ -25,8 +25,8 @@ def request_items(days: int = None) -> str:
     }
     r = requests.post(url, data=payload)
     if r.status_code == requests.codes.ok:
-        return r.text
-    return ""
+        return parse_response(r.text)
+    return {}
 
 
 def request_local_items(days: int) -> str:

@@ -14,7 +14,8 @@ class Application(tk.Frame):
         self.frame_btns = tk.Frame(self)
         self.btn_settings = tk.Button(self.frame_btns, text="Settings")
 
-        self.btn_confirm = tk.Button(self.frame_btns, text="Confirm")
+        confirm_func = kwargs["confirm_func"]
+        del(kwargs["confirm_func"])
 
         self.tv_table = Table(
             self,
@@ -23,6 +24,12 @@ class Application(tk.Frame):
                 "yscrollcommand": self.scroll_y.set,
                 "xscrollcommand": self.scroll_x.set,
             }
+        )
+
+        self.btn_confirm = tk.Button(
+            self.frame_btns,
+            text="Confirm",
+            command=lambda: confirm_func(self.tv_table.item_dict),
         )
 
         self.scroll_x.config(command=self.tv_table.xview)

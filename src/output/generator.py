@@ -19,7 +19,9 @@ def generate_csv(item_dict: dict):
                                         subpatterns[p].get("subpatterns", {}), terminals)
             # Replace Terminals by their corresponding values
             elif p in terminals:
-                out += f"{terminals[p]},"
+                #Drop commas to avoid conflicts with csv format
+                escaped_terminal = terminals[p].replace(",", "")    
+                out += f"{escaped_terminal},"
             # Interpret other values as Literals
             else:
                 out += f"{p},"
@@ -34,12 +36,11 @@ def generate_csv(item_dict: dict):
             map(lambda x: f"{x[0]}: ({';'.join(x[1])})", item['holder_and_type'].items()))
         out += fill_pattern(pattern_json["p"],
                             pattern_json["subpatterns"], item) + "\n"
-
     return out
 
 
-def write_csv(csv_body: str, path: str = None):
+def write_csv(item_dict: dict, path: str = None):
     path = path or get_default_value("ROOT_FOLDER")
     filename = date.today().isoformat()+".csv"
     with open(os.path.join(path, filename), "w+") as fd:
-        fd.write(csv_body)
+        fd.write(generate_csv(item_dict))

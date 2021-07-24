@@ -6,23 +6,21 @@
   "PATTERN": {
     "p": "category,ASB,,LTA,,FAA,,EASA,,effective_date,,,,,,,,supersedure,foreign_ad,holder_and_type,",
     "subpatterns": {
-      "ASB": {
-        "p": "number,revision,issue_date,",
-        "condition": "issued_by"
-      },
-      "LTA": {
-        "p": "number,revision,issue_date,",
-        "condition": "issued_by"
-      },
-      "FAA": {
-        "p": "number,revision,issue_date,",
-        "condition": "issued_by"
-      },
-      "EASA": {
-        "p": "number,revision,issue_date,",
-        "condition": "issued_by"
-      }
+      "ASB": { "p": "number,revision,issue_date,", "condition": "issued_by" },
+      "LTA": { "p": "number,revision,issue_date,", "condition": "issued_by" },
+      "FAA": { "p": "number,revision,issue_date,", "condition": "issued_by" },
+      "EASA": { "p": "number,revision,issue_date,", "condition": "issued_by" }
     }
   },
-  "FILTER": {}
+  "FILTER": {
+    "number": { "forbidden": [] },
+    "category": { "forbidden": [] },
+    "revision": { "forbidden": [] },
+    "issued_by": { "allowed": ["FAA", "EASA"], "forbidden": [] },
+    "issue_date": { "forbidden": [] },
+    "subject": { "forbidden": [] },
+    "holder_and_type": { "forbidden": [] },
+    "effective_date": {},
+    "attachement": { "forbidden": [] }
+  }
 }

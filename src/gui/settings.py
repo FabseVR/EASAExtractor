@@ -16,46 +16,50 @@ class ScrollableText(tk.Frame):
         self.scrollbar.pack(side=RIGHT, fill=Y)
         self.text.pack(expand=True, fill=BOTH)
 
-    def insert(self, *args):
-        self.text.insert(*args)
+    def insert(self, start, value):
+        self.text.insert("0.0", value)
+
+    def delete(self, *args):
+        self.text.delete("0.0", END)
 
     def get(self):
         return json.loads(self.text.get("0.0", END))
 
 
-class Settings(tk.Frame):
-    setting_params = {
-        "ROOT_FOLDER": {
-            "text": "Working Directory:",
-            "type_val": tk.Entry,
-            "insert_val": (0, get_default_value("ROOT_FOLDER")),
-            "action": tk.Button,
-            "action_args": {"text": "Choose", "command": filedialog.askdirectory},
-        },
-        "WEBADDRESS": {
-            "text": "Website:",
-            "type_val": tk.Entry,
-            "insert_val": (0, get_default_value("WEBADDRESS")),
-        },
-        "LAST_X_DAYS": {
-            "text": "Track publications of last X days:",
-            "type_val": tk.Entry,
-            "insert_val": (0, get_default_value("LAST_X_DAYS")),
-        },
-        "PATTERN": {
-            "text": "CSV-Pattern:",
-            "type_val": ScrollableText,
-            "insert_val": (0.0, json.dumps(get_default_value("PATTERN"), indent=2)),
-            "weight": 1,
-        },
-        "FILTER": {
-            "text": "Filter:",
-            "type_val": ScrollableText,
-            "insert_val": (0.0, {}),
-            "weight": 1,
-        },
-    }
+setting_params = {
+    "ROOT_FOLDER": {
+        "text": "Working Directory:",
+        "type_val": tk.Entry,
+        "insert_val": lambda: get_default_value("ROOT_FOLDER"),
+        "action": tk.Button,
+        "action_args": {"text": "Choose", "command": filedialog.askdirectory},
+    },
+    "WEBADDRESS": {
+        "text": "Website:",
+        "type_val": tk.Entry,
+        "insert_val": lambda: get_default_value("WEBADDRESS"),
+    },
+    "LAST_X_DAYS": {
+        "text": "Track publications of last X days:",
+        "type_val": tk.Entry,
+        "insert_val": lambda: get_default_value("LAST_X_DAYS"),
+    },
+    "PATTERN": {
+        "text": "CSV-Pattern:",
+        "type_val": ScrollableText,
+        "insert_val": lambda: json.dumps(get_default_value("PATTERN"), indent=2),
+        "weight": 1,
+    },
+    "FILTER": {
+        "text": "Filter:",
+        "type_val": ScrollableText,
+        "insert_val": lambda: json.dumps(get_default_value("FILTER"), indent=2),
+        "weight": 1,
+    },
+}
 
+
+class Settings(tk.Frame):
     def __init__(self, master):
         super().__init__(master)
 
@@ -63,13 +67,12 @@ class Settings(tk.Frame):
         self.entries = {}
         self.actions = []
 
-        for i, (k, v) in enumerate(self.setting_params.items()):
+        for i, (k, v) in enumerate(setting_params.items()):
             label = tk.Label(self, text=v["text"])
             label.grid(row=i, column=0, sticky=NSEW, padx=5, pady=5)
             self.labels.append(label)
 
             entry = v["type_val"](self)
-            entry.insert(*v["insert_val"])
             entry.grid(
                 row=i,
                 column=1,
@@ -89,6 +92,8 @@ class Settings(tk.Frame):
 
         self.grid_columnconfigure(1, weight=1)
 
+        self.reload_settings()
+
         def save_settings():
             for k, v in self.entries.items():
                 change_settings(k, v.get())
@@ -101,3 +106,8 @@ class Settings(tk.Frame):
 
     def set_btn_back_command(self, command):
         self.btn_back.config(command=command)
+
+    def reload_settings(self):
+        for k, v in self.entries.items():
+            v.delete(0,END)
+            v.insert(0, setting_params[k]["insert_val"]())

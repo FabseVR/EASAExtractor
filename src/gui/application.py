@@ -1,7 +1,8 @@
 import tkinter as tk
 from tkinter.constants import BOTH, BOTTOM, HORIZONTAL, LEFT, RIGHT, TOP, VERTICAL, X, Y
 
-from gui.table import create_table
+from gui.table import Table
+
 
 class Application(tk.Frame):
     def __init__(self, master, **kwargs):
@@ -15,12 +16,14 @@ class Application(tk.Frame):
 
         self.btn_confirm = tk.Button(self.frame_btns, text="Confirm")
 
-        self.tv_table = create_table(
+        self.tv_table = Table(
             self,
-            {"yscrollcommand": self.scroll_y.set, "xscrollcommand": self.scroll_x.set},
-            kwargs
+            **kwargs,
+            table_args={
+                "yscrollcommand": self.scroll_y.set,
+                "xscrollcommand": self.scroll_x.set,
+            }
         )
-
 
         self.scroll_x.config(command=self.tv_table.xview)
         self.scroll_y.config(command=self.tv_table.yview)
@@ -36,3 +39,6 @@ class Application(tk.Frame):
 
     def set_btn_settings_command(self, command):
         self.btn_settings.config(command=command)
+
+    def reload_application(self):
+        self.tv_table.reload_rows()

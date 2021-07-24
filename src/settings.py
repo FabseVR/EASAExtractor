@@ -2,7 +2,6 @@ import json
 
 SETTINGS = 'data/settings.json'
 
-
 def load_settings(path=SETTINGS):
     global settings
     with open(path) as fd:

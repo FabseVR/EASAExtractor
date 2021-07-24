@@ -14,10 +14,12 @@ class ApplicationWrapper(tk.Frame):
 
         def show_application():
             self.settings.forget()
+            self.application.reload_application()
             self.application.pack(expand=True, fill=BOTH)
 
         def show_settings():
             self.application.forget()
+            self.settings.reload_settings()
             self.settings.pack(expand=True, fill=BOTH)
 
         self.application.set_btn_settings_command(show_settings)

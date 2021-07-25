@@ -1,50 +1,74 @@
 import json
+from objects.publication import Publication
 from settings import get_default_value
 
-from watcher.parser import parse_response
-from watcher.utils import add_closed_items, get_closed_items, is_closed_item, remove_outdated_items
+from parsing.parser import parse_response
+from parsing.utils import add_closed_items, get_closed_items, is_closed_item, remove_outdated_items
+from tests.utils import get_test_publications
 
 
 def test_parser():
     """Parser test based on a small real life scenario (9 publications). 
     The Target is hand-crafted .
     """
-    with open(get_default_value("T_PARSER_TARGET")) as fd:
-        target = json.load(fd)
-    with open(get_default_value("T_PARSER_INPUT")) as fd:
-        input = fd.read()
-    output = parse_response(input)
-    assert output.keys() == target.keys()
-    for k in target:
-        assert output[k] == target[k]
+    input = open(get_default_value("T_PARSER_INPUT")).read()
+    target = get_test_publications()
 
-def test_parser_on_empty_str():
+    output = sorted(parse_response(input), key=lambda x: x.number)
+
+    assert len(output) == len(target)
+    for i in range(len(target)):
+        assert output[i] == target[i]
+
+    #parse_respone with empty str
     output = parse_response("")
     assert not output
 
 def test_utils():
-    test_file = get_default_value("CLOSED_ITEMS_JSON")
-    old_items = ["A", "B", "C", "E"]
-    old_json = '{"2019-05-31": ["A", "B", "C", "E"]}'
-    with open(test_file, "w") as fd:
-        fd.write(old_json)
+    test_file = get_default_value("CLOSED_ITEMS_JSON")  
 
-    items = get_closed_items(test_file)
-    assert sorted(items) == sorted(old_items)
-
-    items = ["A", "B", "C", "D"]
-    add_closed_items(items, test_file)
-    target = sorted(set(items) | set(old_items))
-    output = get_closed_items(test_file)
-    assert target == output
-
-    new_items = ["A", "B", "F", "G"]
-    target = ["A", "B"]
-    output = sorted(filter(lambda x: is_closed_item(x, test_file), new_items))
-    assert target == output
-
-    remove_outdated_items(path=test_file)
-    output = get_closed_items(test_file)
+    #get_closed_items on predefined file    
+    input = '{"2019-05-31": ["A", "B"], "2000-01-01":["A", "C", "D"]}'
     target = ["A", "B", "C", "D"]
+
+    with open(test_file, "w") as fd:
+        fd.write(input)
+    output = get_closed_items()
+
+    assert output == target
+
+    #add_closed_items
+    input = ["A", "B", "E", "F"]
+    target = sorted(set(target) | set(input)) #["A", "B", "C", "D", "E", "F"]
+    store = input
+
+    add_closed_items(input)
+    output = get_closed_items()
+
+    assert target == output
+
+    #add_closed_items, empty list
+    input = []
+    #target = target
+
+    add_closed_items(input)
+    output = get_closed_items()
+
+    assert target == output
+
+    #is_closed_item
+    input = ["A", "B", "NotClosedA", "NotClosedB"]
+    target = ["A", "B"]
+
+    output = sorted(filter(lambda x: is_closed_item(x), input))
+
+    assert target == output
+
+    #remove_outdated_items
+    input = test_file
+    target = store #Items of add_closed_items test
+
+    remove_outdated_items()
+    output = get_closed_items()
 
     assert target == output

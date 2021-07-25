@@ -1,0 +1,56 @@
+{
+    "2021-0174": {
+        "at_name": "EASA_AD_2021-0174_1.pdf",
+        "folder": "EASA AD 2021-0174",
+        "foreign_ad": "None",
+        "supersedure": "None"
+    },
+    "2021-0173": {
+        "at_name": "EASA_AD_2021-0173_1.pdf",
+        "folder": "EASA AD 2021-0173",
+        "foreign_ad": "None",
+        "supersedure": "This AD supersedes EASA AD 2019-0215 dated 04 September 2019."
+    },
+    "2021-14-20": {
+        "at_name": "EASA_AD_US-2021-14-20_1.pdf",
+        "folder": "FAA AD 2021-14-20",
+        "foreign_ad": "None",
+        "supersedure": null
+    },
+    "2021-13-10": {
+        "at_name": "EASA_AD_US-2021-13-10_1.pdf",
+        "folder": "FAA AD 2021-13-10",
+        "foreign_ad": "None",
+        "supersedure": null
+    },
+    "2021-17": {
+        "at_name": "EASA_AD_CF-2021-17R1_1.pdf",
+        "folder": "CA AD 2021-17",
+        "foreign_ad": null,
+        "supersedure": null
+    },
+    "2021-0172": {
+        "at_name": "EASA_AD_2021-0172_1.pdf",
+        "folder": "EASA AD 2021-0172",
+        "foreign_ad": "None",
+        "supersedure": "This AD supersedes AD 2021-0045 dated 16 February 2021."
+    },
+    "2021-0152": {
+        "at_name": "EASA_AD_2021-0152R1_1.pdf",
+        "folder": "EASA AD 2021-0152",
+        "foreign_ad": "None",
+        "supersedure": null
+    },
+    "2015-0036": {
+        "at_name": "EASA_AD_2015-0036R3_1.pdf",
+        "folder": "EASA AD 2015-0036",
+        "foreign_ad": "None",
+        "supersedure": null
+    },
+    "21-093": {
+        "at_name": "EASA_PAD_21-093R2_1.pdf",
+        "folder": "EASA PAD 21-093",
+        "foreign_ad": "None",
+        "supersedure": "None"
+    }
+}

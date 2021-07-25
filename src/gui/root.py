@@ -30,9 +30,12 @@ def run_app(confirm_func, **kwargs):
     root = tk.Tk()
     root.geometry("1800x600")
 
-    def confirm_wrapper(*args):
-        confirm_func(*args)
-        root.destroy()
+    def confirm_wrapper(*args,set_status):
+        def wrapper_status(*args):
+            set_status(*args)
+            root.update()
+        confirm_func(*args, wrapper_status)
+        root.after(1000, root.destroy)
 
     app = ApplicationWrapper(root, confirm_func=confirm_wrapper, **kwargs)
     app.pack(expand=True, fill=BOTH)

@@ -13,12 +13,16 @@ remove_outdated_items()
 publications = request_items()
 publications = list(filter(lambda x: not is_closed_item(x.number), publications))
 
-def generate_func(publications):
+def generate_func(publications, set_status):
     make_dirs(publications)
+    set_status("Retrieve attachments.")
     retrieve_attachments(publications)
+    set_status("Extracting information from PDF attachments.")
     extract_attachments(publications)
     add_closed_items([p.number for p in publications])
+    set_status("Export values to csv file.")
     write_csv(publications)
+    set_status("Done.")
 
 def filter_func(publications):
     return list(map(lambda x: x.number, filter(lambda x: validate(x.__dict__), publications)))

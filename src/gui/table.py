@@ -173,5 +173,9 @@ class Table(ttk.Treeview):
         self.insert_rows()
 
     def get_selected_publications(self):
-        selected_items = list(map(lambda x: self.set(x, "Number"), self.tag_has(CHECKBOX.CHECKED.as_tag())))
+        selected_items = list(
+            map(
+                lambda x: self.set(x, "Number"), self.tag_has(CHECKBOX.CHECKED.as_tag())
+            )
+        )
         return [p for p in self.publications if p.number in selected_items]

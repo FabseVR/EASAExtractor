@@ -2,8 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 from tkinter.constants import CENTER
 from gui.filtermenu import FilterMenu
-
-from gui.frame import CHECKER
+from gui.checkbox import CHECKBOX
 
 tv_columns = {
     "checked": "Checked",
@@ -48,7 +47,7 @@ column_params = {
 
 
 class Table(ttk.Treeview):
-    def __init__(self, master, item_dict, filter_func, table_args):
+    def __init__(self, master, publications, filter_func, table_args):
         super().__init__(
             master,
             columns=tv_columns,
@@ -57,9 +56,9 @@ class Table(ttk.Treeview):
             column=list(tv_columns.values()),
             **table_args,
         )
-        self.item_dict = item_dict
+        self.publications = publications
         self.filter_func = filter_func
-        self.relevant_items = filter_func(item_dict)
+        self.relevant_items = filter_func(publications)
         self.filtermenu = FilterMenu(self, self.reload_rows)
 
         self.load_column_params()
@@ -70,7 +69,7 @@ class Table(ttk.Treeview):
         def tv_select_event(event):
             focus = self.focus()
             if focus and focus == self.identify_row(event.y):
-                checked = ~CHECKER(self.set(focus, "Checked"))
+                checked = ~CHECKBOX(self.set(focus, "Checked"))
                 self.set(focus, column="Checked", value=checked)
                 self.item(focus, tags=checked.as_tag())
 
@@ -85,15 +84,14 @@ class Table(ttk.Treeview):
                 if col_id == 0:
                     return
 
-                checked = CHECKER(self.set(iid, "Checked"))
                 row_id = self.set(iid, "Number")
                 key = tv_columns_inv[self["columns"][col_id]]
 
                 self.filtermenu.popup(
                     (event.x_root, event.y_root),
-                    key=key,
-                    value=self.item_dict[row_id][key],
-                    checked=bool(checked),
+                    items=list(filter(lambda x: x.number == row_id, self.publications))[
+                        0
+                    ].get_menu_values(key),
                 )
 
         self.bind("<ButtonRelease-1>", tv_select_event)
@@ -104,9 +102,9 @@ class Table(ttk.Treeview):
             l = sorted(
                 [
                     (
-                        ~CHECKER(self.set(iid, "Checked"))
+                        ~CHECKBOX(self.set(iid, "Checked"))
                         if reverse
-                        else CHECKER(self.set(iid, "Checked")),
+                        else CHECKBOX(self.set(iid, "Checked")),
                         self.set(iid, column),
                         iid,
                     )
@@ -140,16 +138,11 @@ class Table(ttk.Treeview):
             self.column(c, **d_column)
 
     def insert_rows(self):
-        def insert_loop(item_dict, checked, offset=0):
-            for i, v in enumerate(item_dict.values()):
-                values = {k: v.get(k, "") for k in tv_columns.keys()}
+        def insert_loop(publications, checked, offset=0):
+            for i, p in enumerate(publications):
+                values = {k: p.get_as_str(k) for k in tv_columns.keys()}
                 values["checked"] = checked
-                values["holder_and_type"] = " ".join(
-                    map(
-                        lambda x: f"{x[0]}: ({', '.join(x[1])})",
-                        values["holder_and_type"].items(),
-                    )
-                )
+
                 # Order by column index
                 _, values = zip(
                     *sorted(
@@ -161,20 +154,24 @@ class Table(ttk.Treeview):
                     parent="",
                     index=offset + i,
                     values=values,
-                    tags=[CHECKER(checked).as_tag()],
+                    tags=[checked.as_tag()],
                 )
 
         insert_loop(
-            {k: v for k, v in self.item_dict.items() if k in self.relevant_items},
-            CHECKER.CHECKED,
+            [p for p in self.publications if p.number in self.relevant_items],
+            CHECKBOX.CHECKED,
         )
         insert_loop(
-            {k: v for k, v in self.item_dict.items() if k not in self.relevant_items},
-            CHECKER.UNCHECKED,
+            [p for p in self.publications if p.number not in self.relevant_items],
+            CHECKBOX.UNCHECKED,
             len(self.relevant_items),
         )
 
     def reload_rows(self):
         self.delete(*self.get_children())
-        self.relevant_items = self.filter_func(self.item_dict)
+        self.relevant_items = self.filter_func(self.publications)
         self.insert_rows()
+
+    def get_selected_publications(self):
+        selected_items = list(map(lambda x: self.set(x, "Number"), self.tag_has(CHECKBOX.CHECKED.as_tag())))
+        return [p for p in self.publications if p.number in selected_items]

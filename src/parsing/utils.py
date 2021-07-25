@@ -1,5 +1,6 @@
 import json
 from datetime import date, timedelta
+from objects.publication import Publication
 
 from settings import get_default_value
 
@@ -29,15 +30,15 @@ def add_closed_items(items: list, path: str = None):
     """
     path = path or get_default_value("CLOSED_ITEMS_JSON")
 
-    with open(path, "r") as fd:
-        items_json = json.load(fd)
+    items_json = json.load(open(path))
+
     key = date.today().isoformat()
     if key in items_json:
-        items_json[key].append(items)
+        items_json[key].extend(items)
     else:
         items_json[key] = items
-    with open(path, "w") as fd:
-        json.dump(items_json, fd)
+
+    json.dump(items_json, open(path, "w"))
 
 
 def is_closed_item(item: str, path: str = None) -> bool:

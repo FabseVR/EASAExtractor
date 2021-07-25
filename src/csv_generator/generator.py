@@ -4,23 +4,24 @@ import os
 from settings import get_default_value
 
 
-def generate_csv(item_dict: dict):
-    def fill_pattern(pattern: str, subpatterns: dict, terminals: dict):
+def generate_csv(publications: list):
+    def fill_pattern(pattern: str, subpatterns: dict, publication: dict):
         out = ""
 
         for p in pattern.split(",")[:-1]:
+            terminal = publication.get_as_str(p)
             if p in subpatterns:
                 # If a subpattern has the attribute condition,
                 # it will be replaced only if condition's value matches the pattern name
-                if terminals.get(subpatterns[p].get('condition'), p) != p:
+                if publication.get(subpatterns[p].get('condition'), p) != p:
                     out += ","*subpatterns[p]["p"].count(",")
                 else:
                     out += fill_pattern(subpatterns[p]["p"],
-                                        subpatterns[p].get("subpatterns", {}), terminals)
+                                        subpatterns[p].get("subpatterns", {}), publication)
             # Replace Terminals by their corresponding values
-            elif p in terminals:
+            elif terminal is not None:
                 #Drop commas to avoid conflicts with csv format
-                escaped_terminal = terminals[p].replace(",", "")    
+                escaped_terminal = terminal.replace(",", "")    
                 out += f"{escaped_terminal},"
             # Interpret other values as Literals
             else:
@@ -31,16 +32,14 @@ def generate_csv(item_dict: dict):
     pattern_json = get_default_value("PATTERN")
     out = ""
 
-    for item in item_dict.values():
-        item['holder_and_type'] = " ".join(
-            map(lambda x: f"{x[0]}: ({';'.join(x[1])})", item['holder_and_type'].items()))
-        out += fill_pattern(pattern_json["p"],
-                            pattern_json["subpatterns"], item) + "\n"
+    for p in publications:
+        out += fill_pattern(pattern_json["p"], pattern_json["subpatterns"], p) + "\n"
     return out
 
 
-def write_csv(item_dict: dict, path: str = None):
+def write_csv(publications: list, path: str = None):
     path = path or get_default_value("ROOT_FOLDER")
     filename = date.today().isoformat()+".csv"
     with open(os.path.join(path, filename), "w+") as fd:
-        fd.write(generate_csv(item_dict))
+        fd.write(generate_csv(publications))
+    return filename

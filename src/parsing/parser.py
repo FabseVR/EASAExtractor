@@ -1,9 +1,11 @@
+import logging
 from typing import Dict, Tuple
 import requests
 import re
 import bs4
 from bs4 import BeautifulSoup
 from datetime import date, timedelta
+from objects.publication import Publication
 
 from settings import get_default_value
 
@@ -23,7 +25,11 @@ def request_items(days: int = None) -> dict:
         "fi_action": "advanced",
         "fi_date_start": (date.today() - timedelta(days=days)).isoformat(),
     }
-    r = requests.post(url, data=payload)
+    try:
+        r = requests.post(url, data=payload)
+    except requests.exceptions.ConnectionError as e:
+        logging.exception(e)
+        return {}
     if r.status_code == requests.codes.ok:
         return parse_response(r.text)
     return {}
@@ -51,22 +57,23 @@ def parse_response(response: str):
     Returns:
         dict: Parsed table with number as key.
 
-    Example: 
+    Example:
     {
         '2021-0174': {
             'number': '2021-0174'
             'category': 'AD',
-            'revision': '0', 
-            'issued_by': 'EU', 
-            'issue_date': '2021-07-21', 
-            'subject': 'Rotorcraft Flight Manual – Supplements / One-Engine Inoperative Performance Limitations – Amendment', 
+            'revision': '0',
+            'issued_by': 'EU',
+            'issue_date': '2021-07-21',
+            'subject': 'Rotorcraft Flight Manual – Supplements / One-Engine Inoperative Performance Limitations – Amendment',
             'holder_and_type': {'AIRBUS HELICOPTERS': ['SA 330 / AS 332 / EC 225']},
-            'effective_date': '2021-08-04', 
+            'effective_date': '2021-08-04',
             'attachment': 'https://ad.easa.europa.eu/blob/EASA_AD_2021_0174.pdf/AD_2021-0174_1'
         },
         ...
     }
     """
+
     def default_str_factory(val: str) -> str:
         """Basic string manipulation. Strips unnecessary padding."""
         return re.sub(r"\s+", r" ", val.strip())
@@ -75,9 +82,9 @@ def parse_response(response: str):
         return default_str_factory(val.text)
 
     def number_factory(number: bs4.element.Tag) -> Tuple[str, str]:
-        """Splits the actual number into number and revision. 
+        """Splits the actual number into number and revision.
         It checks the following rules:
-        1) If the number starts with a letter (isalpha), the number starts with a country tag. 
+        1) If the number starts with a letter (isalpha), the number starts with a country tag.
         Remove everything until the first occurence of '-'.
         2) If the second last character is a 'R', the number ends with a revision number.
         Remove the last two charactes and return the last char as revision number.
@@ -91,10 +98,10 @@ def parse_response(response: str):
         """
         number = default_factory(number)
         if number[0].isalpha():
-            _, _, number = number.partition('-')
-        if number[-2] == 'R':
+            _, _, number = number.partition("-")
+        if number[-2] == "R":
             return number[:-2], number[-1]
-        return number, '0'
+        return number, "0"
 
     def issued_by_factory(issued_by: bs4.element.Tag):
         """Transfers the actual issued_by value (<img>) into the corresponding string.
@@ -106,15 +113,12 @@ def parse_response(response: str):
         Returns:
             str: The country code ('US', 'EU', ...)
         """
-        country_to_association = {
-            'US': 'FAA',
-            'EU': 'EASA'
-        }
-        country_tag = issued_by.find('img')['alt']
+        country_to_association = {"US": "FAA", "EU": "EASA"}
+        country_tag = issued_by.find("img")["alt"]
         return country_to_association.get(country_tag, country_tag)
 
     def subject_factory(subject: bs4.element.Tag) -> Tuple[str, str]:
-        """Splits the actual subject into subject and a category tag. 
+        """Splits the actual subject into subject and a category tag.
         If the subject defaults to a description with no tags, the subject will stay unchanged and the category is "AD".
         Otherwise, the tag will be the third child (index 2) and the description will be the fourth.
 
@@ -127,10 +131,10 @@ def parse_response(response: str):
         """
         if len(subject.contents) == 1:
             return default_factory(subject), "AD"
-        return default_str_factory(subject.contents[2]), subject.contents[1]['alt']
+        return default_str_factory(subject.contents[2]), subject.contents[1]["alt"]
 
     def holder_and_types_factory(holder_and_types: bs4.element.Tag) -> Dict[str, list]:
-        """Transfers the tree structure of the Approval Holder tag into a dict, 
+        """Transfers the tree structure of the Approval Holder tag into a dict,
         where holder is the key and the types are the values.
 
         Args:
@@ -139,11 +143,12 @@ def parse_response(response: str):
         Returns:
             Dict[str, dict]: (holder, type(s))-dictionary
         """
-        tree = holder_and_types.find_all('li', class_='tc_holder')
+        tree = holder_and_types.find_all("li", class_="tc_holder")
         holder_dict = {
             default_str_factory(h.contents[0]): [
-                default_factory(t) for t in h.find_all('li')
-            ] for h in tree
+                default_factory(t) for t in h.find_all("li")
+            ]
+            for h in tree
         }
         return holder_dict
 
@@ -156,16 +161,15 @@ def parse_response(response: str):
         Returns:
             str: HTTP-link of the attachment.
         """
-        return attachments.find('li', class_='file_pdf').a['href']
+        return attachments.find("li", class_="file_pdf").a["href"]
 
-    response_dict = {}
+    publications = []
 
-    table = BeautifulSoup(response, 'html.parser').find(
-        'table', class_='ad-list')
+    table = BeautifulSoup(response, "html.parser").find("table", class_="ad-list")
     if not table:
         return {}
-    for row in table.find_all('tr'):
-        values = row.find_all('td')
+    for row in table.find_all("tr"):
+        values = row.find_all("td")
         if len(values) != 7:
             continue
 
@@ -177,15 +181,17 @@ def parse_response(response: str):
         effective_date = default_factory(values[5])
         attachment = attachment_factory(values[6])
 
-        response_dict[number] = {
-            'number': number,
-            'category': category,
-            'revision': revision,
-            'issued_by': issued_by,
-            'issue_date': issue_date,
-            'subject': subject,
-            'holder_and_type': holder_and_type,
-            'effective_date': effective_date,
-            'attachment': attachment
-        }
-    return response_dict
+        publications.append(
+            Publication(
+                number,
+                category,
+                revision,
+                issued_by,
+                issue_date,
+                subject,
+                holder_and_type,
+                effective_date,
+                attachment,
+            )
+        )
+    return publications

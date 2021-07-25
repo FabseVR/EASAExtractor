@@ -29,7 +29,7 @@ class Application(tk.Frame):
         self.btn_confirm = tk.Button(
             self.frame_btns,
             text="Confirm",
-            command=lambda: confirm_func(self.tv_table.item_dict),
+            command=lambda: confirm_func(self.tv_table.get_selected_publications()),
         )
 
         self.scroll_x.config(command=self.tv_table.xview)

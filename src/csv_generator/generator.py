@@ -40,6 +40,12 @@ def generate_csv(publications: list):
 def write_csv(publications: list, path: str = None):
     path = path or get_default_value("ROOT_FOLDER")
     filename = date.today().isoformat()+".csv"
-    with open(os.path.join(path, filename), "w+") as fd:
-        fd.write(generate_csv(publications))
+    filepath = os.path.join(path, filename)
+    i = 1
+    while os.path.isfile(filepath):
+        filename = date.today().isoformat()+f"_{i}.csv"
+        filepath = os.path.join(path, filename)
+        i += 1
+    csv_body = generate_csv(publications)
+    open(filepath, "x+").write(csv_body)
     return filename

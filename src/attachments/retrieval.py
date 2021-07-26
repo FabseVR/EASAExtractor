@@ -12,7 +12,7 @@ def retrieve_attachments(publications: list, path: str = None):
 def retrieve_attachment(attachment: str, folder: str, path: str = None):
     path = path or get_default_value("ROOT_FOLDER")
     try:
-        r = requests.get(attachment)
+        r = requests.get(attachment, timeout=10)
     except Exception as e:
         logging.exception(e)
         return None, None
@@ -24,3 +24,4 @@ def retrieve_attachment(attachment: str, folder: str, path: str = None):
         except OSError as e:
             logging.warning(e)
         return path, filename
+    return None, None

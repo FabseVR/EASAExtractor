@@ -25,7 +25,7 @@ def test_parser():
     assert not output
 
 def test_utils():
-    test_file = get_default_value("CLOSED_ITEMS_JSON")  
+    test_file = get_default_value("P_CLOSED_ITEMS_JSON")  
 
     #get_closed_items on predefined file    
     input = '{"2019-05-31": ["A", "B"], "2000-01-01":["A", "C", "D"]}'

@@ -9,12 +9,12 @@ def get_closed_items(path: str = None) -> list:
     """Returns a sorted list of all closed items (numbers) stored locally.
 
     Args:
-        path (str, optional): Path to the local JSON file. Defaults to CLOSED_ITEMS_JSON.
+        path (str, optional): Path to the local JSON file. Defaults to P_CLOSED_ITEMS_JSON.
 
     Returns:
         list: Sorted list of items (number)
     """
-    path = path or get_default_value("CLOSED_ITEMS_JSON")
+    path = path or get_default_value("P_CLOSED_ITEMS_JSON")
 
     with open(path) as fd:
         items = json.load(fd)
@@ -26,9 +26,9 @@ def add_closed_items(items: list, path: str = None):
 
     Args:
         items (list): Item numbers as str
-        path (str, optional): Path to the local JSON file. Defaults to CLOSED_ITEMS_JSON.
+        path (str, optional): Path to the local JSON file. Defaults to P_CLOSED_ITEMS_JSON.
     """
-    path = path or get_default_value("CLOSED_ITEMS_JSON")
+    path = path or get_default_value("P_CLOSED_ITEMS_JSON")
 
     items_json = json.load(open(path))
 
@@ -42,7 +42,7 @@ def add_closed_items(items: list, path: str = None):
 
 
 def is_closed_item(item: str, path: str = None) -> bool:
-    path = path or get_default_value("CLOSED_ITEMS_JSON")
+    path = path or get_default_value("P_CLOSED_ITEMS_JSON")
     return item in get_closed_items(path)
 
 
@@ -51,11 +51,11 @@ def remove_outdated_items(MAX_DAYS: int = 90, path: str = None):
 
     Args:
         MAX_DAYS (int, optional): Largest amount of days items are stored. Defaults to 90.
-        path (str, optional): Path to the local JSON file. Defaults to CLOSED_ITEMS_JSON.
+        path (str, optional): Path to the local JSON file. Defaults to P_CLOSED_ITEMS_JSON.
     """
     def is_older_than_max_days(x):
         return date.fromisoformat(x) < (date.today() - timedelta(days=MAX_DAYS))
-    path = path or get_default_value("CLOSED_ITEMS_JSON")
+    path = path or get_default_value("P_CLOSED_ITEMS_JSON")
 
     with open(path, "r") as fd:
         items_json = json.load(fd)

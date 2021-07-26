@@ -1,7 +1,7 @@
 {
   "ROOT_FOLDER": "data/root",
-  "CLOSED_ITEMS_JSON": "data/closed_items.json",
-  "LOGGING_PATH": "data/logs.log",
+  "P_CLOSED_ITEMS_JSON": "closed_items.json",
+  "P_LOGGING_PATH": "logs.log",
   "WEBADDRESS": "https://ad.easa.europa.eu/search/advanced/result/",
   "LAST_X_DAYS": "14",
   "PATTERN": {

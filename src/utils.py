@@ -14,6 +14,6 @@ def make_dirs(publications: list, path: str = None):
 
 def configure_logging():
     logging.basicConfig(
-        filename=get_default_value("LOGGING_PATH"),
+        filename=get_default_value("P_LOGGING_PATH"),
         format="%(asctime)s: %(message)s"
     )

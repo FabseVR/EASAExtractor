@@ -64,7 +64,7 @@ class Table(ttk.Treeview):
         self.load_column_params()
         self.insert_rows()
 
-        self.tag_configure("UNCHECKED", foreground="#666")
+        self.tag_configure("UNCHECKED", foreground="gray")
 
         def tv_select_event(event):
             focus = self.focus()

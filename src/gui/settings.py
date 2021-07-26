@@ -31,8 +31,6 @@ setting_params = {
         "text": "Working Directory:",
         "type_val": tk.Entry,
         "insert_val": lambda: get_default_value("ROOT_FOLDER"),
-        "action": tk.Button,
-        "action_args": {"text": "Choose", "command": filedialog.askdirectory},
     },
     "WEBADDRESS": {
         "text": "Website:",
@@ -69,7 +67,7 @@ class Settings(tk.Frame):
 
         for i, (k, v) in enumerate(setting_params.items()):
             label = tk.Label(self, text=v["text"])
-            label.grid(row=i, column=0, sticky=NSEW, padx=5, pady=5)
+            label.grid(row=i, column=0, sticky=NSEW, padx=10, pady=5)
             self.labels.append(label)
 
             entry = v["type_val"](self)
@@ -78,17 +76,19 @@ class Settings(tk.Frame):
                 column=1,
                 rowspan=1 + ("action" in v),
                 sticky=NSEW,
-                padx=5,
+                padx=10,
                 pady=5,
             )
             self.entries[k] = entry
 
-            if "action" in v:
-                action = v["action"](self, **v["action_args"])
-                action.grid(row=i, column=2, sticky=NSEW, padx=5, pady=5)
-                self.actions.append(action)
-
             self.grid_rowconfigure(i, weight=v.get("weight", 0))
+
+        def change_dir(val):
+            self.entries["ROOT_FOLDER"].delete(0,END)
+            self.entries["ROOT_FOLDER"].insert(0, val)
+
+        self.btn_select_dir = tk.Button(self, text="Choose", command=lambda : change_dir(filedialog.askdirectory()))
+        self.btn_select_dir.grid(row=0, column=2, padx=10, pady=5)
 
         self.grid_columnconfigure(1, weight=1)
 

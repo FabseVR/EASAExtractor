@@ -125,8 +125,8 @@ class Publication:
             return 
         if x == "holder_and_type":
             for k, v in value.items():
-                out.append(('holder', k, validate({'holder': k})))
-                out.extend([('types', t, validate({'types': t})) for t in v])
+                out.append(('holder', k, validate({'holder': [k]})))
+                out.extend([('types', t, validate({'types': [t]})) for t in v])
         else:
             out.append((x, value, validate({x: value})))
         return out

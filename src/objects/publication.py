@@ -48,7 +48,8 @@ class Publication:
         subject,
         holder_and_type,
         effective_date,
-        attachment_href,
+        at_href,
+        **kwargs
     ):
         self.number = number
         self.category = category
@@ -61,7 +62,7 @@ class Publication:
         self.types = [t for holder_types in self.holder_and_type.values() for t in holder_types]
         self.effective_date = effective_date
 
-        self.at_href = attachment_href
+        self.at_href = at_href
         self.at_name = None
         self._at_path = None
 

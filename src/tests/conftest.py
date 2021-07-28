@@ -4,7 +4,7 @@ from tests.utils import clear_path
 import pytest
 import os
 
-SETTINGS = "tests/data/settings.json"
+SETTINGS = "tests/DATA/settings.json"
 
 
 @pytest.hookimpl()

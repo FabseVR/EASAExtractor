@@ -1,8 +1,6 @@
-import json
-from objects.publication import Publication
+from parsing.easa_parser import parse_xml
 from settings import get_default_value
 
-from parsing.parser import parse_response
 from parsing.utils import add_closed_items, get_closed_items, is_closed_item, remove_outdated_items
 from tests.utils import get_test_publications
 
@@ -11,17 +9,18 @@ def test_parser():
     """Parser test based on a small real life scenario (9 publications). 
     The Target is hand-crafted .
     """
-    input = open(get_default_value("T_PARSER_INPUT")).read()
-    target = get_test_publications()
+    input = open(get_default_value("T_PARSER_INPUT"), "rb").read()
+    input = input.decode('ascii', errors="ignore")
+    target = get_test_publications(True)
 
-    output = sorted(parse_response(input), key=lambda x: x.number)
+    output = sorted(parse_xml(input), key=lambda x: x['number'])
 
     assert len(output) == len(target)
-    for i in range(len(target)):
+    for i in range(len(output)):
         assert output[i] == target[i]
 
     #parse_respone with empty str
-    output = parse_response("")
+    output = parse_xml("")
     assert not output
 
 def test_utils():

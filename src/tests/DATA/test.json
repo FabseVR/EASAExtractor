@@ -1,0 +1,129 @@
+{
+  "2021-0174": {
+    "number": "2021-0174",
+    "category": "AD",
+    "revision": "0",
+    "issued_by": "EASA",
+    "issue_date": "2021-07-21",
+    "subject": "Rotorcraft Flight Manual - Supplements / One-Engine Inoperative Performance Limitations - Amendment",
+    "holder_and_type": {
+      "AIRBUS HELICOPTERS": ["SA 330", "AS 332", "EC 225"]
+    },
+    "effective_date": "2021-08-04",
+    "at_href": "https://ad.easa.europa.eu/blob/EASA_AD_2021_0174.pdf",
+    "ata_chapter": null
+  },
+  "2021-0173": {
+    "number": "2021-0173",
+    "category": "AD",
+    "revision": "0",
+    "issued_by": "EASA",
+    "issue_date": "2021-07-21",
+    "subject": "Oxygen - Courier Area Oxygen Distribution System Flexible Hoses - Inspection / Replacement",
+    "holder_and_type": {
+      "AIRBUS": ["A330"],
+      "ELBE FLUGZEUGWERKE GmbH": ["EASA STC 10063795", "EASA STC 10063798"]
+    },
+    "effective_date": "2021-08-04",
+    "at_href": "https://ad.easa.europa.eu/blob/EASA_AD_2021_0173.pdf",
+    "ata_chapter": null
+  },
+  "2021-14-20": {
+    "number": "2021-14-20",
+    "category": "AD",
+    "revision": "0",
+    "issued_by": "FAA",
+    "issue_date": "2021-07-21",
+    "subject": "Air Conditioning - Cabin Altitude Pressure Switches - Functional Test",
+    "holder_and_type": {
+      "BOEING": ["737"]
+    },
+    "effective_date": "2021-07-20",
+    "at_href": "https://ad.easa.europa.eu/blob/2021-14-20.pdf",
+    "ata_chapter": null
+  },
+  "2021-13-10": {
+    "number": "2021-13-10",
+    "category": "AD",
+    "revision": "0",
+    "issued_by": "FAA",
+    "issue_date": "2021-07-21",
+    "subject": "Wings - Lower Wing Skin - Inspection",
+    "holder_and_type": {
+      "BOEING": ["777"]
+    },
+    "effective_date": "2021-08-19",
+    "at_href": "https://ad.easa.europa.eu/blob/2021-13-10.pdf",
+    "ata_chapter": null
+  },
+  "2021-17": {
+    "number": "2021-17",
+    "category": "AD",
+    "revision": "1",
+    "issued_by": "CA",
+    "issue_date": "2021-07-20",
+    "subject": "Oxygen - Supply System Flexible Oxygen Hose - Inspection and Replacement",
+    "holder_and_type": {
+      "BOMBARDIER": ["BD-700"]
+    },
+    "effective_date": "2021-08-02",
+    "at_href": "https://ad.easa.europa.eu/blob/CF-2021-17R1-F.pdf",
+    "ata_chapter": null
+  },
+  "2021-0172": {
+    "number": "2021-0172",
+    "category": "AD",
+    "revision": "0",
+    "issued_by": "EASA",
+    "issue_date": "2021-07-20",
+    "subject": "Equipment / Furnishings - 80VU Rack Attachments - Inspection / Repair",
+    "holder_and_type": {
+      "AIRBUS": ["A318", "A319", "A320", "A321"]
+    },
+    "effective_date": "2021-08-03",
+    "at_href": "https://ad.easa.europa.eu/blob/EASA_AD_2021_0172.pdf",
+    "ata_chapter": null
+  },
+  "2021-0152": {
+    "number": "2021-0152",
+    "category": "AD",
+    "revision": "1",
+    "issued_by": "EASA",
+    "issue_date": "2021-07-20",
+    "subject": "Fuselage - Main Gearbox Suspension Bar Fittings and Screws - Replacement [Life Limitation]",
+    "holder_and_type": {
+      "AIRBUS HELICOPTERS": ["SA 330", "AS 332", "EC 225"]
+    },
+    "effective_date": "2021-07-27",
+    "at_href": "https://ad.easa.europa.eu/blob/EASA_AD_2021_0152_R1.pdf",
+    "ata_chapter": null
+  },
+  "2015-0036": {
+    "number": "2015-0036",
+    "category": "AD",
+    "revision": "3",
+    "issued_by": "EASA",
+    "issue_date": "2021-07-20",
+    "subject": "Fuselage - Fuselage Skin Repairs - Inspection",
+    "holder_and_type": {
+      "AIRBUS": ["A318", "A319", "A320", "A321"]
+    },
+    "effective_date": "2021-07-27",
+    "at_href": "https://ad.easa.europa.eu/blob/EASA_AD_2015_0036_R3.pdf",
+    "ata_chapter": null
+  },
+  "21-093": {
+    "number": "21-093",
+    "category": "PAD",
+    "revision": "2",
+    "issued_by": "EASA",
+    "issue_date": "2021-07-20",
+    "subject": "UMLAUT ENGINEERING GmbH - Hand-operated Fire Extinguishers - Inspection / Replacement",
+    "holder_and_type": {
+      "APPLIANCES": ["ATA 26 FIRE PROTECTION"]
+    },
+    "effective_date": "",
+    "at_href": "https://ad.easa.europa.eu/blob/EASA_PAD_21_093_R2.pdf",
+    "ata_chapter": null
+  }
+}

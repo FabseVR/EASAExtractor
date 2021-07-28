@@ -25,6 +25,6 @@ if __name__ == '__main__':
     configure_logging()
 
     remove_outdated_items()
-    publications = request_items()
+    publications = request_items("EASA")
     publications = list(filter(lambda x: not is_closed_item(x.number), publications))
     run_app(publications=publications, filter_func=filter_func, confirm_func=generate_func)

@@ -1,15 +1,9 @@
 {
-  "ROOT_FOLDER": "tests/data/root",
-  "P_CLOSED_ITEMS_JSON": "tests/data/closed_items.json",
-
-  "T_PARSER_TARGET": "tests/data/test.json",
-  "T_PARSER_INPUT": "tests/data/test.html",
-  "T_EXTRACTION_TARGET": "tests/data/extract.json",
-  "T_CSV_TARGET": "tests/data/target.csv",
-  "T_TEMP_FOLDER": "tests/temp",
-
+  "ROOT_FOLDER": "/home/fabian/Documents/Projects/EASAExtractor/src/DATA/root",
+  "P_CLOSED_ITEMS_JSON": "closed_items.json",
+  "P_LOGGING_PATH": "logs.log",
   "WEBADDRESS": "https://ad.easa.europa.eu/search/advanced/result/",
-  "LAST_X_DAYS": 14,
+  "LAST_X_DAYS": "14",
   "PATTERN": {
     "p": "category,ASB,,LTA,,FAA,,EASA,,effective_date,,,,,,,supersedure,foreign_ad,holder_and_type,",
     "subpatterns": {
@@ -24,19 +18,10 @@
     "category": { "forbidden": [] },
     "revision": { "forbidden": [] },
     "issued_by": { "allowed": ["FAA", "EASA"], "forbidden": [] },
-    "issue_date": { "forbidden": ["2021-07-21"] },
+    "issue_date": { "forbidden": [] },
     "subject": { "forbidden": [] },
     "holder": { "type": "list", "schema": { "forbidden": [] } },
-    "types": {
-      "type": "list",
-      "schema": { "regex": "^\\S*[0-9]+$", "forbidden": [] }
-    },
-    /*
-    "types": {
-        "type": "list",
-        "schema": { "regex": "^\\S*[0-9]+$", "forbidden": [] }
-    },
-    */
+    "types": { "type": "list", "schema": { "forbidden": [] } },
     "effective_date": { "forbidden": [] },
     "attachment": { "forbidden": [] }
   }

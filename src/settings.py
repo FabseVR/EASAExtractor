@@ -1,22 +1,24 @@
 import jstyleson, sys, os
 
-if getattr(sys, 'frozen', False):
+if getattr(sys, "frozen", False):
     BASE_PATH = sys._MEIPASS
 else:
     BASE_PATH = os.path.dirname(os.path.abspath(__file__))
-BASE_PATH = os.path.join(BASE_PATH, 'DATA')
+BASE_PATH = os.path.join(BASE_PATH, "DATA")
 
-SETTINGS = os.path.join(BASE_PATH, 'settings.json')
+SETTINGS = os.path.join(BASE_PATH, "settings.json")
+
 
 def load_settings(path=SETTINGS):
     global settings
-    settings = jstyleson.load(open(SETTINGS))
+    settings = jstyleson.load(open(path))
 
 
 def change_settings(key, value):
     global settings
     settings[key] = value
     jstyleson.dump(settings, open(SETTINGS, "w"))
+
 
 def get_default_value(key, type=None):
     global settings

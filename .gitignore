@@ -129,4 +129,4 @@ dmypy.json
 .pyre/
 
 #Default data output
-src/data/root/
+src/DATA/root/

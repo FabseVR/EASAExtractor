@@ -4,9 +4,10 @@ from objects.publication import Publication
 
 from settings import get_default_value
 
-def get_test_publications():
-    target = json.load(open(get_default_value("T_PARSER_TARGET")))
-    target = sorted([Publication(**v) for v in target.values()], key=lambda x: x.number)
+def get_test_publications(as_dict=False):
+    target = sorted(json.load(open(get_default_value("T_PARSER_TARGET"))).values(), key=lambda x: x["number"])
+    if not as_dict:
+        target = [Publication(**v) for v in target]
     return target
 
 def clear_path(path):

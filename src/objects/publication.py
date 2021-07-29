@@ -34,8 +34,9 @@ def parse_faa_pattern(text: str):
             foreign_ad = "None"
         else:
             foreign_ad = kv["Affected ADs"]
-    
+
     return foreign_ad, None, foreign_ad is not None
+
 
 class Publication:
     def __init__(
@@ -49,7 +50,7 @@ class Publication:
         holder_and_type,
         effective_date,
         at_href,
-        **kwargs
+        **kwargs,
     ):
         self.number = number
         self.category = category
@@ -59,7 +60,9 @@ class Publication:
         self.subject = subject
         self.holder_and_type = holder_and_type
         self.holder = list(self.holder_and_type.keys())
-        self.types = [t for holder_types in self.holder_and_type.values() for t in holder_types]
+        self.types = [
+            t for holder_types in self.holder_and_type.values() for t in holder_types
+        ]
         self.effective_date = effective_date
 
         self.at_href = at_href
@@ -94,7 +97,6 @@ class Publication:
             if k in __ignored__:
                 continue
             if v != x.get(k):
-                print(f"{k}: \"{v}\" differs from \"{x.get(k)}\"")
                 return False
         return True
 
@@ -104,7 +106,7 @@ class Publication:
         except AttributeError:
             return default
 
-    def get_as_str(self, x, sep1 = " ", sep2 = "; "):
+    def get_as_str(self, x, sep1=" ", sep2="; "):
         try:
             v = self.__getattribute__(x)
         except AttributeError:
@@ -123,11 +125,11 @@ class Publication:
         value = self.get(x)
         out = []
         if not value:
-            return 
+            return
         if x == "holder_and_type":
             for k, v in value.items():
-                out.append(('holder', k, validate({'holder': [k]})))
-                out.extend([('types', t, validate({'types': [t]})) for t in v])
+                out.append(("holder", k, validate({"holder": [k]})))
+                out.extend([("types", t, validate({"types": [t]})) for t in v])
         else:
             out.append((x, value, validate({x: value})))
         return out

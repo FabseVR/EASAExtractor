@@ -18,7 +18,7 @@ def category_factory(x):
 
 def number_factory(x):
     x = x.text
-    if x[0].isalpha():
+    if re.match(r"[A-Z]+-", x):
         _, _, x = x.partition("-")
     if x[-2] == "R":
         return {"number": x[:-2], "revision": x[-1]}
@@ -118,7 +118,7 @@ def parse_xml(s_xml):
     except ET.ParseError as e:
         logging.exception(e)
         return []
-    
+
     for child in root:
         p = {}
         for item in child:

@@ -1,30 +1,50 @@
 import tkinter as tk
 from tkinter import ttk
-from tkinter.constants import BOTH
+from tkinter.constants import BOTH, BOTTOM, LEFT, RIGHT, W, X
 from gui.application import Application
 from gui.settings import Settings
+
 
 class ApplicationWrapper(tk.Frame):
     def __init__(self, master, **kwargs):
         super().__init__(master)
+
+        self.frame_btns = tk.Frame(self)
+
+        self.lbl_status = tk.Label(self.frame_btns, width=100, anchor=W)
+        self.btn_r = tk.Button(self.frame_btns)
+        self.btn_c = tk.Button(self.frame_btns)
 
         self.application = Application(self, **kwargs)
         self.settings = Settings(self)
 
         def show_application():
             self.settings.forget()
-            self.application.reload_application()
+            self.application.reload_application(command_back=show_settings)
             self.application.pack(expand=True, fill=BOTH)
 
         def show_settings():
             self.application.forget()
-            self.settings.reload_settings()
+            self.settings.reload_settings(command_back=show_application)
             self.settings.pack(expand=True, fill=BOTH)
 
-        self.application.set_btn_settings_command(show_settings)
-        self.settings.set_btn_back_command(show_application)
+        self.lbl_status.pack(side=LEFT, padx=10, pady=5)
+        self.btn_c.pack(side=LEFT, padx=10)
+        self.btn_r.pack(side=RIGHT, padx=10)
 
-        self.application.pack(expand=True, fill=BOTH)
+        self.frame_btns.pack(side=BOTTOM, fill=X)
+
+        show_application()
+
+    def set_btn_c(self, **kwargs):
+        self.btn_c.configure(**kwargs)
+
+    def set_btn_r(self, **kwargs):
+        self.btn_r.configure(**kwargs)
+
+    def set_status(self, value):
+        self.lbl_status.configure(text="Status: " + value)
+
 
 def run_app(confirm_func, **kwargs):
     root = tk.Tk()
@@ -40,17 +60,23 @@ def run_app(confirm_func, **kwargs):
 
         # style.map() returns an empty list for missing options, so this should
         # be future-safe
-        return [elm for elm in root.style.map("Treeview", query_opt=option)
-                if elm[:2] != ("!disabled", "!selected")]
+        return [
+            elm
+            for elm in root.style.map("Treeview", query_opt=option)
+            if elm[:2] != ("!disabled", "!selected")
+        ]
 
-    root.style.map("Treeview",
-          foreground=fixed_map("foreground"),
-          background=fixed_map("background"))
+    root.style.map(
+        "Treeview",
+        foreground=fixed_map("foreground"),
+        background=fixed_map("background"),
+    )
 
-    def confirm_wrapper(*args,set_status):
+    def confirm_wrapper(*args, set_status):
         def wrapper_status(*args):
             set_status(*args)
             root.update()
+
         confirm_func(*args, wrapper_status)
         root.after(1000, root.destroy)
 

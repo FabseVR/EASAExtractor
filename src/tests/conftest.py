@@ -4,12 +4,12 @@ from tests.utils import clear_path
 import pytest
 import os
 
-SETTINGS = "tests/DATA/settings.json"
+BASE_PATH = "tests/DATA/"
 
 
 @pytest.hookimpl()
 def pytest_sessionstart(session):
-    load_settings(SETTINGS)
+    load_settings(BASE_PATH)
     os.mkdir(get_default_value("T_TEMP_FOLDER"))
 
 

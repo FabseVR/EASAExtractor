@@ -84,30 +84,27 @@ class Settings(tk.Frame):
             self.grid_rowconfigure(i, weight=v.get("weight", 0))
 
         def change_dir(val):
-            self.entries["ROOT_FOLDER"].delete(0,END)
+            self.entries["ROOT_FOLDER"].delete(0, END)
             self.entries["ROOT_FOLDER"].insert(0, val)
 
-        self.btn_select_dir = tk.Button(self, text="Choose", command=lambda : change_dir(filedialog.askdirectory()))
+        self.btn_select_dir = tk.Button(
+            self, text="Choose", command=lambda: change_dir(filedialog.askdirectory())
+        )
         self.btn_select_dir.grid(row=0, column=2, padx=10, pady=5)
 
         self.grid_columnconfigure(1, weight=1)
 
-        self.reload_settings()
-
-        def save_settings():
-            for k, v in self.entries.items():
-                change_settings(k, v.get())
-
-        self.btn_save = tk.Button(self, text="Save", command=save_settings)
-        self.btn_back = tk.Button(self, text="Back")
-
-        self.btn_back.grid(row=i + 1, column=1)
-        self.btn_save.grid(row=i + 1, column=2)
-
     def set_btn_back_command(self, command):
         self.btn_back.config(command=command)
 
-    def reload_settings(self):
+    def reload_settings(self, command_back):
+        def save_settings():
+            for k, v in self.entries.items():
+                change_settings(k, v.get())
+            self.master.set_status("Settings saved.")
+
         for k, v in self.entries.items():
-            v.delete(0,END)
+            v.delete(0, END)
             v.insert(0, setting_params[k]["insert_val"]())
+        self.master.set_btn_c(text="Back", command=command_back)
+        self.master.set_btn_r(text="Save", command=save_settings)

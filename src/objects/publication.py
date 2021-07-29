@@ -112,8 +112,10 @@ class Publication:
         except AttributeError:
             return
 
-        if type(v) == dict:
+        if isinstance(v, dict):
             v = sep1.join(map(lambda x: f"{x[0]} ({sep2.join(x[1])})", v.items()))
+        elif isinstance(v, list):
+            v = sep2.join(v)
         elif v is None:
             v = ""
         elif type(v) != str:

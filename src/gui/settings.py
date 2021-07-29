@@ -97,7 +97,7 @@ class Settings(tk.Frame):
     def set_btn_back_command(self, command):
         self.btn_back.config(command=command)
 
-    def reload_settings(self, command_back):
+    def reload(self, command_back):
         def save_settings():
             for k, v in self.entries.items():
                 change_settings(k, v.get())

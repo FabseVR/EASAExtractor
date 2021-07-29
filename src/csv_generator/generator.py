@@ -1,10 +1,20 @@
 from datetime import date
 import os
+from typing import List
+from objects.publication import Publication
 
 from settings import get_default_value
 
 
-def generate_csv(publications: list):
+def generate_csv(publications: List[Publication]) -> str:
+    """Generates a csv-formated string (seperator: ",") based on the specified PATTERN.
+
+    Args:
+        publications (List[Publication]): List of Publication objects
+
+    Returns:
+        str: csv-formated string
+    """
     def fill_pattern(pattern: str, subpatterns: dict, publication: dict):
         out = ""
 
@@ -37,7 +47,16 @@ def generate_csv(publications: list):
     return out
 
 
-def write_csv(publications: list, path: str = None):
+def write_csv(publications: list, path: str = None) -> str:
+    """Generates and stores a csv-formated representation of all given Publications into the specified path.
+
+    Args:
+        publications (list): List of Publication objects
+        path (str, optional): Path where the csv-file will be stored. Defaults to ROOT_FOLDER.
+
+    Returns:
+        str: Filename of the generated csv-file
+    """
     path = path or get_default_value("ROOT_FOLDER")
     filename = date.today().isoformat()+".csv"
     filepath = os.path.join(path, filename)
@@ -46,6 +65,8 @@ def write_csv(publications: list, path: str = None):
         filename = date.today().isoformat()+f"_{i}.csv"
         filepath = os.path.join(path, filename)
         i += 1
+
     csv_body = generate_csv(publications)
     open(filepath, "x+").write(csv_body)
+
     return filename

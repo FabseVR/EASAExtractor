@@ -6,6 +6,9 @@ from gui.settings import Settings
 
 
 class ApplicationWrapper(tk.Frame):
+    """A wrapper for an eased swap between application and settings.
+    It also contains and maintains the Buttons at the bottom"""
+
     def __init__(self, master, **kwargs):
         super().__init__(master)
 
@@ -15,26 +18,22 @@ class ApplicationWrapper(tk.Frame):
         self.btn_r = tk.Button(self.frame_btns)
         self.btn_c = tk.Button(self.frame_btns)
 
-        self.application = Application(self, **kwargs)
-        self.settings = Settings(self)
+        self.fg_frame = Application(self, **kwargs)
+        self.bg_frame = Settings(self)
 
-        def show_application():
-            self.settings.forget()
-            self.application.reload_application(command_back=show_settings)
-            self.application.pack(expand=True, fill=BOTH)
-
-        def show_settings():
-            self.application.forget()
-            self.settings.reload_settings(command_back=show_application)
-            self.settings.pack(expand=True, fill=BOTH)
+        def swap():
+            self.fg_frame.forget()
+            self.bg_frame.reload(command_back=swap)
+            self.bg_frame.pack(expand=True, fill=BOTH)
+            self.fg_frame, self.bg_frame = self.bg_frame, self.fg_frame
 
         self.lbl_status.pack(side=LEFT, padx=10, pady=5)
         self.btn_c.pack(side=LEFT, padx=10)
         self.btn_r.pack(side=RIGHT, padx=10)
 
         self.frame_btns.pack(side=BOTTOM, fill=X)
-
-        show_application()
+        self.fg_frame.reload(command_back=swap)
+        self.fg_frame.pack(expand=True, fill=BOTH)
 
     def set_btn_c(self, **kwargs):
         self.btn_c.configure(**kwargs)

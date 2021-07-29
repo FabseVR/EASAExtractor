@@ -14,6 +14,8 @@ from gui.table import Table
 
 
 class Application(tk.Frame):
+    """A horizontally and vertically scrollable Table"""
+
     def __init__(self, master, **kwargs):
         super().__init__(master)
 
@@ -32,8 +34,6 @@ class Application(tk.Frame):
             },
         )
 
-        self.frame_btns = tk.Frame(self)
-
         status = f"{len(self.tv_table.publications)} publications retrieved, {len(self.tv_table.get_selected_publications())} considered relevant"
         self.master.set_status(status)
 
@@ -45,7 +45,7 @@ class Application(tk.Frame):
 
         self.tv_table.pack(side=TOP, expand=True, fill=BOTH)
 
-    def reload_application(self, command_back):
+    def reload(self, command_back):
         self.master.set_btn_c(
             text="Confirm",
             command=lambda: self.confirm_func(

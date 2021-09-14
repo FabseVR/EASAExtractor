@@ -42,13 +42,18 @@ def type_designation_factory(x):
 
             def combine_pattern(x):
                 p1 = re.findall(r"/([^/\s]+)", "/" + x)
-                p2 = re.findall(r" (\w+)$", x)[-1]
-                return [f"{p} {p2}" for p in p1]
+                p2 = re.findall(r" (\w+)$", x)
+                if p2:
+                    p2 = p2[-1]
+                    return [f"{p} {p2}" for p in p1]
+                else:
+                    return p1
+                
 
             x = [t for types in map(combine_pattern, x) for t in types]
         return x
 
-    x = re.split(r"/([^:]+):", "/" + x.text)
+    x = re.split(r"/([^/:]+):", "/" + x.text)
     holders, types = x[1::2], x[2::2]
     types = map(parse_types, types)
     return {"holder_and_type": dict(zip(holders, types))}
@@ -80,8 +85,10 @@ def attachments_factory(x):
 
 def request_items(*args):
     b_xml = request_xml(*args)
-    s_xml = b_xml.decode("ascii", errors="ignore")
+    if b_xml is None:
+        return []
 
+    s_xml = b_xml.decode("ascii", errors="ignore")
     return parse_xml(s_xml)
 
 
@@ -144,3 +151,4 @@ def request_xml(days: int = None):
             return r.content
     except Exception as e:
         logging.exception(e)
+        return None

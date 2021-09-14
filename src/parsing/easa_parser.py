@@ -8,7 +8,6 @@ from datetime import date, timedelta
 import xml.etree.ElementTree as ET
 import requests
 import re
-import bs4
 import html
 
 

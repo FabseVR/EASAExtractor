@@ -1,10 +1,5 @@
-import logging
-import requests
-from bs4 import BeautifulSoup
 from objects.publication import Publication
 from parsing import easa_parser
-
-from settings import get_default_value
 
 
 def request_items(type, *args) -> list:

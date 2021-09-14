@@ -48,6 +48,8 @@ class ApplicationWrapper(tk.Frame):
 def run_app(confirm_func, **kwargs):
     root = tk.Tk()
     root.geometry("1800x600")
+    root.title("EASA Extract")
+    #root.iconbitmap("../res/Icon.ico")
 
     root.style = ttk.Style()
 

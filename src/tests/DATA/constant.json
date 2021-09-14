@@ -1,0 +1,9 @@
+{
+  "P_CLOSED_ITEMS_JSON": "closed_items.json",
+
+  "T_PARSER_TARGET": "tests/DATA/test.json",
+  "T_PARSER_INPUT": "tests/DATA/test.xml",
+  "T_EXTRACTION_TARGET": "tests/DATA/extract.json",
+  "T_CSV_TARGET": "tests/DATA/target.csv",
+  "T_TEMP_FOLDER": "tests/temp"
+}

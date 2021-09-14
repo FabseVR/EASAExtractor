@@ -3,7 +3,7 @@ from attachments.extraction import extract_attachments
 from filtering.filter import validate
 from gui.root import run_app
 from csv_generator.generator import write_csv
-from utils import configure_logging, make_dirs
+from utils import configure_logging, create_data_path, make_dirs
 from parsing.parser import request_items
 from parsing.utils import add_closed_items, is_closed_item, remove_outdated_items
 from attachments.retrieval import retrieve_attachments
@@ -30,6 +30,7 @@ def filter_open(publications):
 
 
 if __name__ == "__main__":
+    create_data_path()
     configure_logging()
 
     try:

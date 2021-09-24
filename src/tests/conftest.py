@@ -4,11 +4,9 @@ from tests.utils import clear_path
 import pytest
 import os
 
-BASE_PATH = "tests/DATA/"
-
-
 @pytest.hookimpl()
 def pytest_sessionstart(session):
+    BASE_PATH = "tests/DATA/"
     load_settings(BASE_PATH)
     os.mkdir(get_default_value("T_TEMP_FOLDER"))
 

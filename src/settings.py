@@ -13,7 +13,7 @@ def load_settings(path=None):
     else:
         BASE_PATH = path
     """
-    BASE_PATH = path or os.path.expanduser('~/.easaextract/')
+    BASE_PATH = path or os.path.expanduser("~/.easaextract/")
 
     SETTINGS = os.path.join(BASE_PATH, "settings.json")
     CONSTANTS = os.path.join(BASE_PATH, "constant.json")
@@ -28,6 +28,7 @@ def change_settings(key, value):
     elif key in constants:
         constants[key] = value
         jstyleson.dump(constants, open(CONSTANTS, "w"))
+
 
 def get_default_value(key, type=None):
     if key in constants:

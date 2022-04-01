@@ -47,7 +47,6 @@ def type_designation_factory(x):
                     return [f"{p} {p2}" for p in p1]
                 else:
                     return p1
-                
 
             x = [t for types in map(combine_pattern, x) for t in types]
         return x
@@ -72,14 +71,17 @@ def issued_by_factory(x):
 
 
 def attachments_factory(x):
-    return {
-        "at_href": next(
-            filter(
-                lambda x: x.endswith("pdf"),
-                map(lambda x: x.find("uri").text, x.findall("attachment")),
-            )
+    at_href = next(
+        filter(
+            lambda x: x.endswith("pdf"),
+            map(lambda x: x.find("uri").text, x.findall("attachment")),
         )
-    }
+    )
+
+    # Quick fix for wrong domain in XML-Files
+    at_href = at_href.replace("ad.ext.easa.local", "ad.easa.europa.eu")
+
+    return {"at_href": at_href}
 
 
 def request_items(*args):

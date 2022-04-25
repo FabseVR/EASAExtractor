@@ -1,14 +1,11 @@
-import enum
-from logging import exception
-import logging
-from typing import Dict, Tuple
-from objects.publication import Publication
-from settings import get_default_value
-from datetime import date, timedelta
-import xml.etree.ElementTree as ET
-import requests
-import re
 import html
+import logging
+import re
+import xml.etree.ElementTree as ET
+from datetime import date, timedelta
+
+import requests
+from settings import get_default_value
 
 
 def category_factory(x):
@@ -90,6 +87,7 @@ def request_items(*args):
         return []
 
     s_xml = b_xml.decode("ascii", errors="ignore")
+    print(s_xml)
     return parse_xml(s_xml)
 
 
@@ -143,13 +141,14 @@ def request_xml(days: int = None):
         "fi_action": "advanced",
         "fi_date_start": (date.today() - timedelta(days=days)).isoformat(),
     }
+    params = {"format": "xml", "r": "500"}
     try:
-        r = requests.post(url, data=data)
-        r = requests.get(
-            url + "?format=xml&r=500", cookies={"PHPSESSID": r.cookies["PHPSESSID"]}
-        )
-        if r.status_code == requests.codes.ok:
-            return r.content
+        session = requests.Session()
+        session.post(url, data=data)
+        r = session.get(url, params=params)
+        r.raise_for_status()
+
+        return r.content
     except Exception as e:
         logging.exception(e)
         return None
